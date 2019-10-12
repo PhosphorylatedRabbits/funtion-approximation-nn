@@ -1,1 +1,1 @@
-# funtion-approximation-nn
+# function-approximation-nn
