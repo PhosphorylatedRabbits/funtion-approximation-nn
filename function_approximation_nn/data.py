@@ -45,7 +45,7 @@ class BoundedPointsDataset(Dataset):
     def __len__(self):
         """
         Get number of pairs.
-  
+
         Returns:
             the number of pairs.
         """
@@ -61,4 +61,4 @@ class BoundedPointsDataset(Dataset):
                 - the first containing x.
                 - the second containing f(x).
         """
-        return self.x, self.fx
+        return self.x[index], self.fx[index]
