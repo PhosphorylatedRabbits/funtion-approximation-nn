@@ -53,6 +53,14 @@ parser.add_argument(
     required=False
 )
 parser.add_argument(
+    '-d',
+    '--dropout',
+    type=float,
+    help='dropout rate.',
+    default=0.,
+    required=False
+)
+parser.add_argument(
     '--model_name', type=str,
     help='model name.', default='model',
     required=False
@@ -127,6 +135,7 @@ def main(arguments):
     OUTPUT_DIMENSION = arguments.output_dimension
     NUMBER_OF_LAYERS = arguments.number_of_layers
     NUMBER_OF_UNITS = arguments.number_of_units
+    DROPOUT = arguments.dropout
     MODEL_NAME = arguments.model_name
     TRAINING_POINTS = arguments.training_points
     TRAINING_SAMPLING = arguments.training_sampling
@@ -174,7 +183,8 @@ def main(arguments):
     # definition of base model
     model = Approximator(
         INPUT_DIMENSION, OUTPUT_DIMENSION,
-        hidden_units=[NUMBER_OF_UNITS]*NUMBER_OF_LAYERS
+        hidden_units=[NUMBER_OF_UNITS]*NUMBER_OF_LAYERS,
+        dropout=DROPOUT
     )
 
     optimizer = torch.optim.Adam(

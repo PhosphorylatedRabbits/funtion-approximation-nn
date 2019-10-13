@@ -21,17 +21,19 @@ After installation the commmand `approximate` is made available:
 
 ```console
 usage: approximate [-h] [--input_dimension INPUT_DIMENSION]
-                   [--output_dimension OUTPUT_DIMENSION] [-n MODEL_NAME]
+                   [--output_dimension OUTPUT_DIMENSION] [-l NUMBER_OF_LAYERS]
+                   [-u NUMBER_OF_UNITS] [-d DROPOUT] [--model_name MODEL_NAME]
                    [--training_points TRAINING_POINTS]
                    [--training_sampling TRAINING_SAMPLING]
                    [--validation_points VALIDATION_POINTS]
                    [--validation_sampling VALIDATION_SAMPLING] [-s SEED]
-                   [-b BATCH_SIZE] [--epochs EPOCHS] [-l LEARNING_RATE]
-                   [-o OUTPUT_PATH]
+                   [-b BATCH_SIZE] [--epochs EPOCHS]
+                   [--learning_rate LEARNING_RATE] [-o OUTPUT_PATH]
                    function
 
 positional arguments:
-  function              string representing a function to be evaluated with eval.
+  function              string representing a function to be evaluated with
+                        eval.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -39,7 +41,13 @@ optional arguments:
                         input dimension.
   --output_dimension OUTPUT_DIMENSION
                         output dimension.
-  -n MODEL_NAME, --model_name MODEL_NAME
+  -l NUMBER_OF_LAYERS, --number_of_layers NUMBER_OF_LAYERS
+                        number of layers.
+  -u NUMBER_OF_UNITS, --number_of_units NUMBER_OF_UNITS
+                        number of units per layer.
+  -d DROPOUT, --dropout DROPOUT
+                        dropout rate.
+  --model_name MODEL_NAME
                         model name.
   --training_points TRAINING_POINTS
                         number of training points.
@@ -53,7 +61,7 @@ optional arguments:
   -b BATCH_SIZE, --batch_size BATCH_SIZE
                         batch size.
   --epochs EPOCHS       epochs.
-  -l LEARNING_RATE, --learning_rate LEARNING_RATE
+  --learning_rate LEARNING_RATE
                         learning rate.
   -o OUTPUT_PATH, --output_path OUTPUT_PATH
                         output path.
