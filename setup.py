@@ -39,4 +39,5 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
     packages=find_packages(),
+    scripts=['bin/approximate']
 )
