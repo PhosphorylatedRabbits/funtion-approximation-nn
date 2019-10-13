@@ -3,10 +3,9 @@ dependencies:
   - python>=3.6
   - pip
   - pip:
-    - torch>=1.1.0
-    - torchvision>=0.2.2
+    - torch==1.2.0
     - pytorch-lightning==0.4.8
-    - tqdm>=4.35.0
+    - tqdm==4.35.0
     - brontes==0.0.2
     - mlflow>=1.2.0
     - flake8>=3.7.8
