@@ -58,8 +58,12 @@ class Approximator(nn.Module):
         self.dropout = dropout
         self.stacked_layers = nn.Sequential(
             *[
-                create_dense_layer(input_size, output_size) for input_size,
-                output_size in zip(self.dimensions, self.dimensions[1:])
+                create_dense_layer(
+                    input_size, output_size, dropout=self.dropout
+                )
+                for input_size, output_size in zip(
+                    self.dimensions, self.dimensions[1:]
+                )
             ]
         )
         self.output = nn.Linear(self.dimensions[-1], self.output_dimension)
