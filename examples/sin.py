@@ -1,8 +1,8 @@
+"""Approximate sin."""
 # imports
 import logging
 import sys
 import argparse
-import tempfile
 import torch
 import numpy as np
 import pytorch_lightning as pl
@@ -29,10 +29,24 @@ parser.add_argument(
     required=False
 )
 parser.add_argument(
+    '--training_sampling',
+    type=str,
+    help='training sampling strategy.',
+    default='uniform',
+    required=False
+)
+parser.add_argument(
     '--validation_points',
     type=int,
     help='number of validation points.',
     default=100,
+    required=False
+)
+parser.add_argument(
+    '--validation_sampling',
+    type=str,
+    help='validation sampling strategy.',
+    default='uniform',
     required=False
 )
 parser.add_argument(
@@ -55,6 +69,14 @@ parser.add_argument(
     help='learning rate.', default=1e-5,
     required=False
 )
+parser.add_argument(
+    '-o',
+    '--output_path',
+    type=str,
+    help='output path.',
+    default=None,
+    required=False
+)
 
 
 def main(arguments):
@@ -66,11 +88,14 @@ def main(arguments):
     # create aliases
     MODEL_NAME = arguments.model_name
     TRAINING_POINTS = arguments.training_points
+    TRAINING_SAMPLING = arguments.training_sampling
     VALIDATION_POINTS = arguments.validation_points
+    VALIDATION_SAMPLING = arguments.validation_sampling
     SEED = arguments.seed
     BATCH_SIZE = arguments.batch_size
     EPOCHS = arguments.epochs
     LEARNING_RATE = arguments.learning_rate
+    OUTPUT_PATH = arguments.output_path
 
     # set the seed
     np.random.seed(SEED)
@@ -85,7 +110,8 @@ def main(arguments):
                     number_of_points=TRAINING_POINTS,
                     input_dimension=1,
                     output_dimension=1,
-                    function=torch.sin
+                    sampling=TRAINING_SAMPLING,
+                    function=np.sin
                 ),
                 batch_size=BATCH_SIZE,
                 shuffle=True
@@ -96,7 +122,8 @@ def main(arguments):
                     number_of_points=VALIDATION_POINTS,
                     input_dimension=1,
                     output_dimension=1,
-                    function=torch.sin
+                    sampling=VALIDATION_SAMPLING,
+                    function=np.sin
                 ),
                 batch_size=BATCH_SIZE,
                 shuffle=True
@@ -128,9 +155,10 @@ def main(arguments):
     trainer.fit(brontes_model)
 
     # save the model
-    saved_model = f'{tempfile.mkdtemp()}/{MODEL_NAME}.pt'
-    logger.info(f'storing model in: {saved_model}')
-    torch.save(brontes_model.model, saved_model)
+    if OUTPUT_PATH is not None:
+        saved_model = f'{OUTPUT_PATH}/{MODEL_NAME}.pt'
+        logger.info(f'storing model in: {saved_model}')
+        torch.save(brontes_model.model, saved_model)
 
 
 if __name__ == "__main__":
