@@ -185,9 +185,11 @@ def main(arguments):
                                 sampling='grid') 
 
     # y = brontes_model.forward(data.x)
-    brontes_model.eval()
+    brontes_model.model.eval()
     x_torch = torch.from_numpy(data.x).float()
-    y = brontes_model(x_torch)
+    y = brontes_model.model(x_torch)
+    # print(brontes_model.model)
+    # print(y)
     print(brontes_model.loss(y, torch.from_numpy(fun(data.x)).float()))
     return data.x, y
 
@@ -197,5 +199,5 @@ if __name__ == "__main__":
     plt.plot(x, y.data, 'o-')
     plt.plot(x, fun(x), '--')
     plt.show()
-    error = np.linalg.norm(y.data.numpy()-fun(x))/np.linalg.norm(fun(x))
+    error = np.linalg.norm(y.data.numpy()-fun(x))#/np.linalg.norm(fun(x))
     print(f"Error: {error}")

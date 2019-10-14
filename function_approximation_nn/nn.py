@@ -37,7 +37,7 @@ class Approximator(nn.Module):
         output_dimension,
         hidden_units=[32]*2,
         activation_fn=nn.ReLU(),
-        dropout=.5
+        dropout=0
     ):
         """
         Initialize the approximation function network.
