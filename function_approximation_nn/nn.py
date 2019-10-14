@@ -35,7 +35,7 @@ class Approximator(nn.Module):
         self,
         input_dimension,
         output_dimension,
-        hidden_units=[32, 32],
+        hidden_units=[32]*2,
         activation_fn=nn.ReLU(),
         dropout=.5
     ):

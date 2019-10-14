@@ -14,6 +14,7 @@ class BoundedPointsDataset(Dataset):
         function,
         lower_bound=.0,
         upper_bound=1.,
+        distribution='random',
         device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     ):
         """
@@ -37,9 +38,17 @@ class BoundedPointsDataset(Dataset):
         self.upper_bound = upper_bound
         self.range = self.upper_bound - self.lower_bound
         self.device = device
-        self.x = torch.rand(
-            self.number_of_points, self.input_dimension
-        )*self.range
+        self.distribution = distribution
+
+        if self.distribution is 'random':
+            self.x = torch.rand(
+                self.number_of_points, self.input_dimension
+            )*self.range
+        elif self.distribution is 'uniform':
+            self.x = torch.arange(1, self.number_of_points+1).unsqueeze(1)/float(self.number_of_points)*self.range
+        else:
+            raise NotImplementedError()
+
         self.fx = self.function(self.x)
 
     def __len__(self):

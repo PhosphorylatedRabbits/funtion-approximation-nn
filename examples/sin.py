@@ -7,8 +7,11 @@ import torch
 import numpy as np
 import pytorch_lightning as pl
 from brontes import Brontes
+import matplotlib.pyplot as plt
 from function_approximation_nn.data import BoundedPointsDataset
 from function_approximation_nn.nn import Approximator
+
+torch.set_default_dtype(torch.float64)
 
 # logging setup
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -19,6 +22,16 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     '-n', '--model_name', type=str,
     help='model name.', default='model',
+    required=False
+)
+parser.add_argument(
+    '-w', '--width', type=int,
+    help='NN width.', default=32,
+    required=False
+)
+parser.add_argument(
+    '-d', '--depth', type=int,
+    help='NN depth.', default=1,
     required=False
 )
 parser.add_argument(
@@ -56,6 +69,9 @@ parser.add_argument(
     required=False
 )
 
+def fun(x):
+    # print(torch.sin(x))
+    return torch.sin(np.pi*x)
 
 def main(arguments):
     """
@@ -71,6 +87,8 @@ def main(arguments):
     BATCH_SIZE = arguments.batch_size
     EPOCHS = arguments.epochs
     LEARNING_RATE = arguments.learning_rate
+    WIDTH = arguments.width
+    DEPTH = arguments.depth
 
     # set the seed
     np.random.seed(SEED)
@@ -85,7 +103,8 @@ def main(arguments):
                     number_of_points=TRAINING_POINTS,
                     input_dimension=1,
                     output_dimension=1,
-                    function=torch.sin
+                    function=fun,
+                    distribution='random'
                 ),
                 batch_size=BATCH_SIZE,
                 shuffle=True
@@ -96,7 +115,8 @@ def main(arguments):
                     number_of_points=VALIDATION_POINTS,
                     input_dimension=1,
                     output_dimension=1,
-                    function=torch.sin
+                    function=fun,
+                    distribution='random'
                 ),
                 batch_size=BATCH_SIZE,
                 shuffle=True
@@ -104,7 +124,7 @@ def main(arguments):
     }
 
     # definition of base model
-    model = Approximator(1, 1)
+    model = Approximator(1, 1, [WIDTH]*DEPTH)
 
     optimizer = torch.optim.Adam(
         model.parameters(),
@@ -128,10 +148,26 @@ def main(arguments):
     trainer.fit(brontes_model)
 
     # save the model
-    saved_model = f'{tempfile.mkdtemp()}/{MODEL_NAME}.pt'
-    logger.info(f'storing model in: {saved_model}')
-    torch.save(brontes_model.model, saved_model)
+    # saved_model = f'{tempfile.mkdtemp()}/{MODEL_NAME}.pt'
+    # logger.info(f'storing model in: {saved_model}')
+    # torch.save(brontes_model.model, saved_model)
+    data = BoundedPointsDataset(number_of_points=VALIDATION_POINTS,
+                                input_dimension=1,
+                                output_dimension=1,
+                                function=fun,
+                                distribution='uniform')
+
+    # y = brontes_model.forward(data.x)
+    brontes_model.eval()
+    y = brontes_model(data.x)
+    return data.x, y
 
 
 if __name__ == "__main__":
-    main(arguments=parser.parse_args())
+    x, y = main(arguments=parser.parse_args())
+    plt.plot(x, y.data, 'o-')
+    plt.plot(x, fun(x), '--')
+    plt.show()
+    print(y.data - fun(x))
+    error = torch.norm(y.data-fun(x))/torch.norm(fun(x))
+    print(f"Error: {error}")
