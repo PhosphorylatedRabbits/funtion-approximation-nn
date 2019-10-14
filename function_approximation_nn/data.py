@@ -92,6 +92,6 @@ class BoundedPointsDataset(Dataset):
                 - the second containing f(x).
         """
         return (
-            torch.tensor(self.x[index], device=self.device).float(),
-            torch.tensor(self.fx[index], device=self.device).float()
+            torch.tensor(self.x[index], device=self.device),
+            torch.tensor(self.fx[index], device=self.device)
         )

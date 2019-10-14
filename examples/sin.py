@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from function_approximation_nn.data import BoundedPointsDataset
 from function_approximation_nn.nn import Approximator
 
-# torch.set_default_dtype(torch.float64)
+torch.set_default_dtype(torch.float64)
 
 # logging setup
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -186,9 +186,9 @@ def main(arguments):
 
     # y = brontes_model.forward(data.x)
     brontes_model.eval()
-    x_torch = torch.from_numpy(data.x).float()
+    x_torch = torch.from_numpy(data.x)
     y = brontes_model(x_torch)
-    print(brontes_model.loss(y, torch.from_numpy(fun(data.x)).float()))
+    print(brontes_model.loss(y, torch.from_numpy(fun(data.x))))
     return data.x, y
 
 
