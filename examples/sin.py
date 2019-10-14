@@ -188,6 +188,7 @@ def main(arguments):
     brontes_model.eval()
     x_torch = torch.from_numpy(data.x).float()
     y = brontes_model(x_torch)
+    print(brontes_model.loss(y, torch.from_numpy(fun(data.x)).float()))
     return data.x, y
 
 
