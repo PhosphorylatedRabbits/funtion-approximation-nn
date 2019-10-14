@@ -63,6 +63,13 @@ parser.add_argument(
     required=False
 )
 parser.add_argument(
+    '--test_points',
+    type=int,
+    help='number of test points.',
+    default=100,
+    required=False
+)
+parser.add_argument(
     '-s', '--seed', type=int,
     help='seed for reproducible results.', default=42,
     required=False
@@ -107,6 +114,7 @@ def main(arguments):
     TRAINING_SAMPLING = arguments.training_sampling
     VALIDATION_POINTS = arguments.validation_points
     VALIDATION_SAMPLING = arguments.validation_sampling
+    TEST_POINTS = arguments.test_points
     SEED = arguments.seed
     BATCH_SIZE = arguments.batch_size
     EPOCHS = arguments.epochs
@@ -178,11 +186,11 @@ def main(arguments):
         logger.info(f'storing model in: {saved_model}')
         torch.save(brontes_model.model, saved_model)
 
-    data = BoundedPointsDataset(number_of_points=VALIDATION_POINTS,
+    data = BoundedPointsDataset(number_of_points=TEST_POINTS,
                                 input_dimension=1,
                                 output_dimension=1,
                                 function=fun,
-                                sampling='grid') 
+                                sampling='grid')
 
     # y = brontes_model.forward(data.x)
     brontes_model.eval()
