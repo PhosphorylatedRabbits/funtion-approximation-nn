@@ -1,4 +1,4 @@
 pytorch-lightning==0.4.8
-torch==1.2.0
+torch==2.2.0
 tqdm==4.35.0
 brontes==0.0.2
